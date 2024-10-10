@@ -126,13 +126,16 @@
     - Added DoesPasswordExist() method to quickly check if the user has a password associated with it or not.
     - Added CreateUserPassword() method to associate the new user-entered password if the input is valid after prompted for one. This method also calls the function to encrypt it before applying it to the User object.
   ## Version 1.4 - 10/9/2024
-  - **Description:** Rewrote 90% of the application. Added PasswordHandler class for this exercise.
+  - **Description:** Rewrote 90% of the application. Added PasswordHandler class and 3 exception classes for this exercise.
   - **Files Added:**
     - app/src/main/java/login/CodeHandler.java
     - app/src/main/java/login/Database.java
     - app/src/main/java/login/MessageHandler.java
     - app/src/main/java/login/PasswordHandler.java
     - app/src/main/java/login/UsernameHandler.java
+    - app/src/main/java/login/exception_handlers/DefaultPasswordException.java
+    - app/src/main/java/login/exception_handlers/PasswordPolicyException.java
+    - app/src/main/java/login/exception_handlers/PasswordValidationException.java
   - **Files Updated:**
     - app/src/main/java/login/App.java
     - app/src/main/java/login/Cryptographer.java
@@ -147,6 +150,7 @@
     - app/src/main/java/services/UserService.java
   - **Directories Added:**
     - app/src/main/java/login/
+    - app/src/main/java/login/exception_handlers/
   - **Directories Removed:**
     - app/src/main/java/helpers/
     - app/src/main/java/models/
@@ -155,6 +159,7 @@
     - UserService.java has been transformed into Database.java with most of the code being rewritten.
     - ErrorMessages.java has been renamed to MessageHandler.java and removed/updated some of the messages.
     - Authentication logic from UserService.java has been moved to their respective *Handler.java classes.
+    - Added exception handlers based on exercise requirements.
   - **App Class Changes**
     - Updated comments and program entry logic.
   - **Cryptographer Class Changes**

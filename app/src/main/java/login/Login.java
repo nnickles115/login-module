@@ -4,6 +4,8 @@ package login;
 import java.io.Console;
 //#endregion IMPORTS
 
+import login.exception_handlers.DefaultPasswordException;
+
 /**
  * COP 4078 Exercise: 5
  * File Name: Login.java
@@ -149,12 +151,14 @@ public class Login {
         // Prompt user for password.
         while(attempts > 0) {
             passwordChars = CONSOLE.readPassword("Password: ");
+            // if(App.DEBUG) {
+            //     System.out.println("[DEBUG] Entered Password: " + new String(passwordChars));
+            // }
             if(_passwordHandler.AuthenticatePassword(username, passwordChars)) {
                 _correctCredentials++;
                 break;
             }
             // Print remaining attempts and delay to prevent brute force.
-            MessageHandler.PrintMessage(MessageHandler.INCORRECT_INPUT, "Password");
             attempts = RemainingAttempts(attempts);
             AddDelay(ONE_SECOND);
         }
@@ -183,6 +187,9 @@ public class Login {
 
         while(attempts > 0) {
             passwordChars = CONSOLE.readPassword("Create a new password: ");
+            // if(App.DEBUG) {
+            //     System.out.println("[DEBUG] Entered Password: " + new String(passwordChars));
+            // }
             if(_passwordHandler.CreateNewPassword(username, passwordChars)) {
                 break;
             }
@@ -193,7 +200,10 @@ public class Login {
 
         if(attempts <= 0) {
             MessageHandler.PrintMessage(MessageHandler.DEFAULT_PASSWORD);
-            _passwordHandler.CreateDefaultPassword(username);
+            try {
+                _passwordHandler.CreateDefaultPassword(username);
+            }
+            catch(DefaultPasswordException e) {} // Nothing to do.
         }
     }
 

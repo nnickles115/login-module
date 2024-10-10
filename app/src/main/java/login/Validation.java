@@ -1,5 +1,8 @@
 package login;
 
+import login.exception_handlers.PasswordPolicyException;
+import login.exception_handlers.PasswordValidationException;
+
 /**
  * COP 4078 Exercise: 5
  * File Name: Validation.java
@@ -76,28 +79,26 @@ public class Validation {
      * @apiNote Renamed from IsPasswordValid to ValidatePassword in version 1.4.
      * Rewrote all logic to simplify function.
      */
-    public boolean ValidatePassword(String password) {
+    public void ValidatePassword(String password) throws PasswordValidationException {
         String value = "Password";
 
         // Check if password is empty.
         if(password.isEmpty()) {
-            MessageHandler.PrintMessage(MessageHandler.EMPTY_INPUT, value);
-            return false;
+            throw new PasswordValidationException(MessageHandler.EMPTY_INPUT, value);
         }
         
         // Check if password contains SQL chars.
         if(!SQLInjectionCheck(password)) {
-            MessageHandler.PrintMessage(MessageHandler.SQL_INJECTION);
-            return false;
+            throw new PasswordValidationException(MessageHandler.SQL_INJECTION, value);
         }
 
         // Check if password adheres to policy.
-        if(!PasswordPolicyCheck(password)) {
-            MessageHandler.PrintMessage(MessageHandler.POLICY_FAILED, value);
-            return false;
+        try {
+            PasswordPolicyCheck(password);
         }
-
-        return true;
+        catch(PasswordPolicyException e) {
+            throw new PasswordValidationException(e.getMessage());
+        }
     }
 
     /**
@@ -174,16 +175,18 @@ public class Validation {
      * @apiNote Added check for only letters or numbers in password in version 1.2.
      * @apiNote Changed function to return a bool instead of a String in version 1.4.
      */
-    private boolean PasswordPolicyCheck(String input) {
+    private void PasswordPolicyCheck(String input) throws PasswordPolicyException {
+        String value = "Password";
+
         // Check if password is between 8-12 chars (included).
         if(input.length() < MIN_PASSWORD_LENGTH ||
            input.length() > MAX_PASSWORD_LENGTH) {
-            return false;
+            throw new PasswordPolicyException(MessageHandler.POLICY_FAILED, value);
         }
 
         // Check if password contains only valid characters (A-Z, a-z, 0-9)
         if(!input.matches("[A-Za-z0-9]+")) {
-            return false;
+            throw new PasswordPolicyException(MessageHandler.POLICY_FAILED, value);
         }
 
         // Check for password policies.
@@ -196,7 +199,9 @@ public class Validation {
             else if(Character.isDigit(c)) hasNumber    = true;
         }
 
-        return hasUpper && hasLower && hasNumber;
+        if(!hasUpper || !hasLower || !hasNumber) {
+            throw new PasswordPolicyException(MessageHandler.POLICY_FAILED, value);
+        }
     }
 
     /**

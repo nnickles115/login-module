@@ -85,5 +85,39 @@ public class MessageHandler {
             System.out.println("Unknown Error");
         }
     }
+
+    /**
+     * Matches the error message key to the related error message 
+     * and returns it to the called exception.
+     * 
+     * @param key Key to match with related error message in {@link #_messages}
+     * @return Error message or "Unknown Error".
+     * @apiNote Added in version 1.4.
+     */
+    public static String GetExceptionMessage(String key) {
+        String message = _messages.get(key);
+        if(message != null) {
+            return message;
+        }
+        return "Unknown Error";
+    }
+
+    /**
+     * Matches the error message key to the related error message 
+     * and returns it to the called exception.
+     * Takes in value to apply to placeholder '%s'.
+     * 
+     * @param key Key to match with related error message in {@link #_messages}
+     * @param value Value to replace placeholder string with.
+     * @return Error message or "Unknown Error".
+     * @apiNote Added in version 1.4 for placeholder messages.
+     */
+    public static String GetExceptionMessage(String key, String value) {
+        String message = _messages.get(key);
+        if(message != null) {
+            return String.format(message, value);
+        }
+        return "Unknown Error";
+    }
     //#endregion FUNCTIONS
 }

@@ -1,5 +1,8 @@
 package login;
 
+import login.exception_handlers.DefaultPasswordException;
+import login.exception_handlers.PasswordValidationException;
+
 /**
  * COP 4078 Exercise: 5
  * File Name: PasswordHandler.java
@@ -58,9 +61,13 @@ public class PasswordHandler {
 
         String password = new String(passwordChars);
         String encryptedPassword = _cryptographer.EncryptVigenere(password);
-
+        
         // Check if password failed validation checks.
-        if(!_validation.ValidatePassword(password)) {
+        try {
+            _validation.ValidatePassword(password);
+        }
+        catch(PasswordValidationException e) {
+            MessageHandler.PrintMessage(MessageHandler.INCORRECT_INPUT, "Password");
             return false;
         }
 
@@ -102,11 +109,16 @@ public class PasswordHandler {
         if(user == null) return false;
 
         String newPassword = new String(newPasswordChars);
-        if(_validation.ValidatePassword(newPassword)) {
+        try {
+            _validation.ValidatePassword(newPassword);
             user.SetPassword(_cryptographer.EncryptVigenere(newPassword));
-            return true;
         }
-        return false;
+        catch(PasswordValidationException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -122,13 +134,18 @@ public class PasswordHandler {
      * @see User
      * @apiNote Added in version 1.4.
      */
-    public void CreateDefaultPassword(String username) {
+    public void CreateDefaultPassword(String username) throws DefaultPasswordException {
         User user = _database.GetUserByUsername(username);
         String generatedPassword;
         while(true) {
             generatedPassword = _defaultPassword.GeneratePassword();
-            if(_validation.ValidatePassword(generatedPassword)) {
+            try {
+                _validation.ValidatePassword(generatedPassword);
                 break;
+            }
+            catch(PasswordValidationException e) {
+                // This should never happen...
+                throw new DefaultPasswordException("Default password failed to generate.");
             }
         }
         user.SetPassword(_cryptographer.EncryptVigenere(generatedPassword));

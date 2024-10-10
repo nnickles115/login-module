@@ -1,0 +1,127 @@
+# Configuration Control Document
+
+## Project Overview
+- **Project Name:** Login Module
+- **Repository:** https://github.com/nnickles115/login-module
+- **Version:** 1.3
+- **Date:** 9/30/2024
+
+# Change Management
+- **Author:** Noah Nickles
+- **Class:** Secure Software Development - CEN 4078
+- **Professor:** Stephen Hopkins
+- **School:** University of West Florida
+
+# Version History
+  ## Version 1.0 - 8/22/2024
+  - **Description:** Basic Console app for logging into a program.
+  - **Files Added:**
+    - .gitattributes
+    - .gitignore
+    - app/build.gradle
+    - app/src/main/java/App.java
+    - app/src/main/java/Login.java
+    - app/src/main/java/helpers/Utils.java
+    - app/src/main/java/models/User.java
+    - app/src/main/java/services/UserService.java
+    - gradlew
+    - gradlew.bat
+    - settings.gradle
+  - **Changes:**
+    - Initial commit with all core functionality implemented.
+    - 3 users were created with passwords.
+    - Outputs useranmes with SHA-256 hashed passwords to a text file.
+    - An array was used to store the usernames and passwords as a pseudo database.
+    - Prompts users for a username and password.
+    - Ensured the password is not visibile when typing it into the console.
+    - Password has 3 attempts before kicking the user back to the username prompt.
+    - Displays a welcome message with the username of the person who logged in.
+  ## Version 1.1 - 8/30/2024
+  - **Description:** Updated app to include more robust error handling and prevent potential hacking methods such as SQL Injection.
+  - **Files Added:**
+    - app/src/main/java/helpers/ErrorMessages.java
+    - app/src/main/java/services/Validation.java
+    - app/src/main/java/helpers/Config.java
+  - **Files Updated:**
+    - app/src/main/java/App.java
+    - app/src/main/java/Login.java
+    - app/src/main/java/helpers/Utils.java
+    - app/src/main/java/models/User.java
+    - app/src/main/java/services/UserService.java
+  - **Changes:**
+    - Added proper header documentation to each class.
+    - Added methods to check for SQL injection, Password policy, and Interger overflow.
+    - Inlcuded 10-digit MFA code to be associated with each user.
+    - Added modular error message system with ErrorMessages class.
+    - Modified UserService and made Validation classes follow singleton pattern as they are services.
+    - Split AuthenticateUser method in UserService class into AuthenticateUserPassword and AuthenticateUserCode.
+    - Moved methods IsUserValid, IsPasswordValid, and IsMFAValid from Login to Validation class.
+    - Added CommonValidation method to check all user entered values if they are null or empty and check if username and password fields contain SQL chars.
+    - Modified Run method in Login class to display login successful with welcome message, or login failed.
+    - Updated logic in Prompt, ReadUsername, ReadPassword, and ReadMFA to work with new classes and methods.
+    - Changed User model from a record class into a normal class for more control over the boilerplate code (getters).
+    - Updated ClearPassword method in Utils class to have 2 verisons: One takes a char[] and the other takes a byte[].
+    - Created STOI method inside of Utils class based on the Java source code from Integer.parseInt() method.
+    - Updated HashPassword method in Utils class to return a byte[] instead of a char[] to ensure password encapsulation behind SHA-256 hash.
+    - Added Config class to hold global variables that changes the behavior of the program for testing purposes.
+  ## Version 1.2 - 9/19/2024
+  - **Description:** Updated app to use Vigenere encryption for the usernames and passwords.
+  - **Files Added:**
+    - app/src/main/java/services/Cryptographer.java
+  - **Files Updated:**
+    - app/src/main/java/App.java
+    - app/src/main/java/Login.java
+    - app/src/main/java/helpers/Config.java
+    - app/src/main/java/helpers/ErrorMessages.java
+    - app/src/main/java/helpers/Utils.java
+    - app/src/main/java/models/User.java
+    - app/src/main/java/services/UserService.java
+    - app/src/main/java/services/Validation.java
+  - **General Changes**
+    - Changed all classes that used singleton services to lazy loading to avoid circular dependency issues leading to a stack overflow.
+    - Added the Cryptographer class to encrypt usernames and passwords of users in the database as per the requirements in this exercise.
+    - Reverted the User class to a record class.
+    - Updated functions in the Login class to use record class getters as per the change to the User class.
+    - Updated functions in the UserService class to use record class getters as per the change to the User class.
+  - **Validation Class Changes**
+    - Updated PasswordPolicyCheck() function to check if only A-Z, a-z, 0-9 chars are present in the password.
+    - Updated IntOverflowCheck() function to use built in Java function Integer.parseInt() which automatically converts a String to an int and checks for overflow – throwing an error if that is the case.
+    - Updated IsMFAValid function to also use Integer.parseInt() now.
+  - **UserService Class Changes**
+    - Updated PopulateDatabase() function to use new EncryptVigenere method from the Cryptographer class. Also removed non-valid chars from the passwords as per the new policy of letters and numbers only. Additionally, applied encryption to the usernames instead of just the passwords.
+    - Renamed DoesUserExist() to AuthenticateUsername().
+    - Updated AuthenticateUsername() function to check the encrypted and decrypted version of the username from user input and the database before authenticating.
+    - Updated AuthenticatePassword() function to check the encrypted and decrypted version of the password from user input and the database before authenticating.
+    - Updated GetUserByUsername() function to search the database by encrypted username as per the new change to how usernames are stored.
+  - **ErrorMessages Class Changes**
+    - Added constants for keys in the _messages HashMap to avoid misspelling the keys within the validation functions.
+    - Updated the BuildErrorMessage() function to be much simpler than it was previously.
+  - **Utils Class Changes**
+    - Removed STOI() method in favor of built in Interger.parseInt() method.
+    - Depreciated the HashPassword() method as my original hashing encryption is no longer used due to the new Cryptographer class.
+    - Depreciated the ClearPassword(byte[]) method due to the hashing no longer being used.
+  ## Version 1.3 - 9/30/2024
+  - **Description:** Updated app to include a class for generating a default password if the user fails to set one
+  and one is not already associated with the login username.
+  - **Files Added:**
+    - app/src/main/java/services/DefaultPassword.java
+  - **Files Updated:**
+    - app/src/main/java/Login.java
+    - app/src/main/java/helpers/ErrorMessages.java
+    - app/src/main/java/models/User.java
+    - app/src/main/java/services/UserService.java
+  - **Login Class Changes**
+    - Updated login loop to check if there is a password associated with the entered username.
+    - Added PromptNewPassword() method that requests a new password from the user.
+      - If the user fails two times to create a new password that meets the policy, a random one is generated using the new DefaultPassword class.
+      - If the user successfully creates a new password, they are notified that it was set and to then login using the new password.
+  - **ErrorMessages Class Changes**
+    - Updated the debug messages to include a [DEBUG] tag. This helps differentiate the output from normal and debug messages.
+  - **User Class Changes**
+    - Reverted it yet again to a normal class instead of a record class. Now that passwords are being set during runtime, it needs to be modifiable; which record classes aren't.
+    - Added getters and setters for relevant member variables.
+  - **UserService Class Changes**
+    - Updated multiple methods to use the new getters instead of the record class getters as per the change to the User class type.
+    - Removed hardcoded passwords from the Users in the "database" since they are now able to be set at runtime. Replaced them with null values by default.
+    - Added DoesPasswordExist() method to quickly check if the user has a password associated with it or not.
+    - Added CreateUserPassword() method to associate the new user-entered password if the input is valid after prompted for one. This method also calls the function to encrypt it before applying it to the User object.

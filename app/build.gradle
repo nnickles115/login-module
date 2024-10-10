@@ -36,3 +36,11 @@ application {
     // Define the main class for the application.
     mainClass = 'login.App'
 }
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'login.App'
+        )
+    }
+}

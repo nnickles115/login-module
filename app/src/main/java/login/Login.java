@@ -93,10 +93,6 @@ public class Login {
             if(_correctCredentials >= 2) {
                 ReadCode(username);
             }
-
-            // Should end after ReadCode(), if not print failed message and loop again.
-            System.out.println("Login failed, returning to start.");
-            AddDelay(ONE_SECOND);
         }
         // Print encrypted login info to text file and display welcome message.
         _database.GenerateFile();
@@ -166,6 +162,7 @@ public class Login {
         // Return user back to start of program after too many fails.
         if(attempts <= 0) {
             MessageHandler.PrintMessage(MessageHandler.TOO_MANY_FAILS);
+            AddDelay(ONE_SECOND);
         }
     }
 
@@ -224,6 +221,12 @@ public class Login {
             // Print remaining attempts and delay to prevent brute force.
             MessageHandler.PrintMessage(MessageHandler.INCORRECT_INPUT, "MFA Code");
             attempts = RemainingAttempts(attempts);
+            AddDelay(ONE_SECOND);
+        }
+
+        // Return user back to start of program after too many fails.
+        if(attempts <= 0) {
+            MessageHandler.PrintMessage(MessageHandler.TOO_MANY_FAILS);
             AddDelay(ONE_SECOND);
         }
     }

@@ -67,7 +67,7 @@ public class PasswordHandler {
             _validation.ValidatePassword(password);
         }
         catch(PasswordValidationException e) {
-            MessageHandler.PrintMessage(MessageHandler.INCORRECT_INPUT, "Password");
+            System.out.println(e.getMessage());
             return false;
         }
 

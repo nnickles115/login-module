@@ -3,8 +3,8 @@
 ## Project Overview
 - **Project Name:** Login Module
 - **Repository:** https://github.com/nnickles115/login-module
-- **Version:** 1.3
-- **Date:** 9/30/2024
+- **Version:** 1.4
+- **Date:** 10/9/2024
 
 # Change Management
 - **Author:** Noah Nickles
@@ -125,3 +125,50 @@
     - Removed hardcoded passwords from the Users in the "database" since they are now able to be set at runtime. Replaced them with null values by default.
     - Added DoesPasswordExist() method to quickly check if the user has a password associated with it or not.
     - Added CreateUserPassword() method to associate the new user-entered password if the input is valid after prompted for one. This method also calls the function to encrypt it before applying it to the User object.
+  ## Version 1.4 - 10/9/2024
+  - **Description:** Rewrote 90% of the application. Added PasswordHandler class for this exercise.
+  - **Files Added:**
+    - app/src/main/java/login/CodeHandler.java
+    - app/src/main/java/login/Database.java
+    - app/src/main/java/login/MessageHandler.java
+    - app/src/main/java/login/PasswordHandler.java
+    - app/src/main/java/login/UsernameHandler.java
+  - **Files Updated:**
+    - app/src/main/java/login/App.java
+    - app/src/main/java/login/Cryptographer.java
+    - app/src/main/java/login/DefaultPassword.java
+    - app/src/main/java/login/Login.java
+    - app/src/main/java/login/User.java
+    - app/src/main/java/login/Validation.java
+  - **Files Removed:**
+    - app/src/main/java/helpers/Config.java
+    - app/src/main/java/helpers/ErrorMessages.java
+    - app/src/main/java/helpers/Utils.java
+    - app/src/main/java/services/UserService.java
+  - **Directories Added:**
+    - app/src/main/java/login/
+  - **Directories Removed:**
+    - app/src/main/java/helpers/
+    - app/src/main/java/models/
+    - app/src/main/java/services/
+  - **General Changes**
+    - UserService.java has been transformed into Database.java with most of the code being rewritten.
+    - ErrorMessages.java has been renamed to MessageHandler.java and removed/updated some of the messages.
+    - Authentication logic from UserService.java has been moved to their respective *Handler.java classes.
+  - **App Class Changes**
+    - Updated comments and program entry logic.
+  - **Cryptographer Class Changes**
+    - Updated comments and code formatting.
+  - **DefaultPassword Class Changes**
+    - Updated comments and code formatting.
+    - Changed/moved some of the functions to work with new PasswordHandler class.
+  - **Login Class Changes**
+    - Updated comments and code formatting.
+    - Follows the singleton pattern now.
+    - Rewrote most of the functions in this class providing simplified logic.
+    - Moved AddDelay() and InterruptThread() to this class from Utils.java (removed class).
+  - **User Class Changes**
+    - Updated comments and code formatting.
+  - **Validation Class Changes**
+    - Updated comments and code formatting.
+    - Updated logic to only check for policies, no longer authenticates the credientials. That logic is moved to their respective *Handler.java classes.

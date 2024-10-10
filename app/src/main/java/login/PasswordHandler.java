@@ -71,7 +71,13 @@ public class PasswordHandler {
             return false;
         }
 
-        return user.GetPassword().equals(encryptedPassword);
+        // Check if password matches.
+        if(!user.GetPassword().equals(encryptedPassword)) {
+            MessageHandler.PrintMessage(MessageHandler.INCORRECT_INPUT, "Password");
+            return false;
+        }
+        
+        return true;
     }
 
     /**

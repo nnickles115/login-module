@@ -47,7 +47,7 @@ public class CodeHandler {
         User user = _database.GetUserByUsername(username);
         if(user == null) return false;
 
-        return _validation.ValidateCode(Integer.toString(user.GetCode()));
+        return _validation.ValidateCode(code);
     }
     //#endregion FUNCTIONS
 }

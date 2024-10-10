@@ -219,7 +219,6 @@ public class Login {
                 break;
             }
             // Print remaining attempts and delay to prevent brute force.
-            MessageHandler.PrintMessage(MessageHandler.INCORRECT_INPUT, "MFA Code");
             attempts = RemainingAttempts(attempts);
             AddDelay(ONE_SECOND);
         }

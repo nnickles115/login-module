@@ -116,12 +116,6 @@ public class Validation {
     public boolean ValidateCode(String code) {
         String value = "MFA Code";
 
-        // Check if code is less than 10 digits.
-        if(code.length() < MIN_CODE_LENGTH) {
-            MessageHandler.PrintMessage(MessageHandler.POLICY_FAILED, value);
-            return false;
-        }
-
         // Check if code is empty.
         if(code.isEmpty()) {
             MessageHandler.PrintMessage(MessageHandler.EMPTY_INPUT, value);
@@ -131,6 +125,12 @@ public class Validation {
         // Check if code contains non-digits or overflows.
         if(!IntOverflowCheck(code)) {
             MessageHandler.PrintMessage(MessageHandler.INVALID_INPUT, value);
+            return false;
+        }
+
+        // Check if code is less than 10 digits.
+        if(code.length() < MIN_CODE_LENGTH) {
+            MessageHandler.PrintMessage(MessageHandler.POLICY_FAILED, value);
             return false;
         }
 
